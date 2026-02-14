@@ -1,0 +1,697 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Plant Disease Classification | PBL 2026</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+    <style>
+      @import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap");
+      body {
+        background-color: #020617;
+        color: #f8fafc;
+        font-family: "Plus Jakarta Sans", sans-serif;
+        scroll-behavior: smooth;
+      }
+      .glass {
+        background: rgba(255, 255, 255, 0.03);
+        backdrop-filter: blur(15px);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+      }
+      .gradient-text {
+        background: linear-gradient(90deg, #60a5fa, #a855f7);
+        -webkit-background-clip: text;
+        background-clip: text;
+        -webkit-text-fill-color: transparent;
+      }
+
+      /* TIMER UI - FIXED CONTRAST */
+      #timerContainer {
+        background: #ffffff;
+        color: #020617;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.8);
+        border: 3px solid #3b82f6;
+        z-index: 1000;
+      }
+      @keyframes flicker {
+        0%,
+        100% {
+          background-color: #ffffff;
+        }
+        50% {
+          background-color: #fca5a5;
+        }
+      }
+      .timer-warning {
+        animation: flicker 1s infinite;
+        border: 3px solid #ef4444 !important;
+        color: #b91c1c !important;
+      }
+      .timer-stop {
+        background-color: #991b1b !important;
+        color: #ffffff !important;
+        border: 3px solid #f87171 !important;
+        animation: none;
+      }
+    </style>
+  </head>
+  <body>
+    <div
+      id="timerContainer"
+      class="fixed bottom-10 right-10 px-8 py-4 rounded-3xl flex items-center gap-4 transition-all"
+    >
+      <i
+        class="fas fa-hourglass-start text-blue-600 text-2xl"
+        id="timerIcon"
+      ></i>
+      <span
+        id="displayTime"
+        class="text-4xl font-black font-mono tracking-tighter"
+        >00:00</span
+      >
+    </div>
+    <nav
+      class="fixed w-full z-50 glass border-b border-slate-800/50 px-8 py-4 flex justify-between items-center"
+    >
+      <div class="flex items-center gap-4">
+        <div
+          class="bg-white p-1 rounded flex items-center justify-center shadow-md"
+          style="height: 48px; width: 48px"
+        >
+          <img
+            src="mujlogo.jpg"
+            alt="MUJ"
+            class="h-full w-auto object-contain"
+            onerror="this.src = 'https://via.placeholder.com/50?text=MUJ'"
+          />
+        </div>
+        <div class="flex flex-col text-left">
+          <span
+            class="text-xl font-black text-white leading-none uppercase tracking-tighter"
+            >PBL <span class="text-blue-500 italic">2026</span></span
+          >
+          <span
+            class="text-[9px] text-slate-400 font-bold uppercase tracking-widest mt-1"
+            >Dept. of Computer Science & Engineering</span
+          >
+        </div>
+      </div>
+      <div
+        class="hidden md:flex gap-8 text-[11px] uppercase tracking-widest font-bold opacity-70"
+      >
+        <a href="#problem" class="hover:text-blue-400 transition">Problem</a>
+        <a href="#methodology" class="hover:text-blue-400 transition"
+          >Methodology</a
+        >
+        <a href="#results" class="hover:text-blue-400 transition">Results</a>
+        <a href="#team" class="hover:text-blue-400 transition">Team</a>
+      </div>
+    </nav>
+
+    <main class="max-w-6xl mx-auto px-6 pt-48 pb-32 space-y-32">
+      <section class="text-center">
+        <div
+          class="inline-block px-4 py-1 border border-slate-800 rounded-full text-slate-500 text-[10px] font-mono mb-6 uppercase tracking-widest"
+        >
+          ID: 23FE10CSE00576
+        </div>
+        <h1
+          class="text-6xl md:text-7xl font-extrabold mb-8 uppercase leading-tight"
+        >
+          <span class="gradient-text uppercase"
+            >Plant Disease Classification</span
+          >
+        </h1>
+        <p
+          class="text-slate-400 max-w-2xl mx-auto italic text-lg leading-relaxed border-l-2 border-blue-500/30 pl-6 text-left"
+        >
+          "Automated identification of plant pathogens using transfer learning
+          and deep convolutional neural networks to classify diseases into
+          bacteria, fungi, viruses, oomycetes, and healthy plants."
+        </p>
+      </section>
+
+      <section id="problem" class="grid md:grid-cols-2 gap-12 items-stretch">
+        <div
+          class="glass p-10 rounded-[2.5rem] flex flex-col justify-center border-l-4 border-blue-600"
+        >
+          <h2 class="text-3xl font-extrabold mb-6">Problem Statement</h2>
+          <p class="text-slate-400 leading-relaxed text-justify">
+            Plant diseases cause significant crop losses worldwide, affecting
+            food security and agricultural economies. Early and accurate
+            identification of the causative pathogen is critical for effective
+            treatment. Manual identification requires expertise and is
+            time-consuming. This project develops an automated classification
+            system using deep learning to identify the pathogen type responsible
+            for plant diseases from leaf images.
+          </p>
+        </div>
+        <div class="space-y-6">
+          <div class="glass p-7 rounded-3xl border-r-4 border-blue-500/50">
+            <h3
+              class="text-blue-400 font-bold text-xs uppercase tracking-widest mb-2"
+            >
+              Literature Review
+            </h3>
+            <p class="text-sm text-slate-400">
+              Existing CNN-based plant disease classification systems focus on
+              disease identification but often don't classify by pathogen type.
+              Transfer learning with models like ResNet, VGG, and EfficientNet
+              has shown promise in agricultural image classification tasks,
+              achieving 85-95% accuracy on various plant disease datasets.
+            </p>
+          </div>
+          <div class="glass p-7 rounded-3xl border-r-4 border-purple-500/50">
+            <h3
+              class="text-purple-400 font-bold text-xs uppercase tracking-widest mb-2"
+            >
+              Research Gap / Innovation
+            </h3>
+            <p class="text-sm text-slate-400">
+              Unlike disease-specific classifiers, this project classifies by
+              pathogen category (Bacteria, Fungus, Virus, Oomycete,
+              Nan/Healthy), enabling pathogen-level treatment recommendations.
+              Comparison of ResNet50 vs. EfficientNet architectures provides
+              insights into optimal model selection for agricultural
+              deployments.
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="methodology" class="space-y-12">
+        <h2 class="text-4xl font-black text-center uppercase tracking-tight">
+          System <span class="text-blue-500">Methodology</span>
+        </h2>
+        <div class="grid md:grid-cols-3 gap-8">
+          <div class="glass p-8 rounded-3xl text-center">
+            <i class="fas fa-database text-blue-500 text-3xl mb-4"></i>
+            <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">
+              Dataset
+            </h3>
+            <p class="text-sm text-slate-400 mb-3">PlantVillage Dataset</p>
+            <ul class="text-xs text-slate-500 space-y-1 text-left">
+              <li>• 38 plant disease classes</li>
+              <li>• 5 pathogen categories</li>
+              <li>• Colored images (224×224)</li>
+              <li>• Train/Val/Test: 81/9/10%</li>
+              <li>• Stratified sampling</li>
+            </ul>
+          </div>
+          <div class="glass p-8 rounded-3xl text-center">
+            <i class="fas fa-microchip text-purple-500 text-3xl mb-4"></i>
+            <h3 class="font-bold mb-2 uppercase text-xs tracking-widest">
+              Model Architecture
+            </h3>
+            <p class="text-sm text-slate-400 mb-3">Transfer Learning</p>
+            <ul class="text-xs text-slate-500 space-y-1 text-left">
+              <li>• ResNet50 (ImageNet)</li>
+              <li>• EfficientNet (ImageNet)</li>
+              <li>• Frozen base layers</li>
+              <li>• GlobalAveragePooling2D</li>
+              <li>• Dropout (0.3)</li>
+              <li>• Softmax output (5 classes)</li>
+            </ul>
+          </div>
+          <div
+            class="glass p-4 rounded-2xl text-center border-2 border-green-500/20 bg-green-500/5"
+          >
+            <i class="fab fa-python text-green-500 text-1xl mb-2"></i>
+            <h3
+              class="font-bold mb-3 uppercase text-xs tracking-widest text-green-400"
+            >
+              Live Execution
+            </h3>
+            <a
+              href="https://github.com/diyaaa19/plant_disease_pathogen"
+              target="_blank"
+              class="block px-2 py-1 bg-green-600 rounded-full text-xs font-black hover:bg-green-500 transition shadow-lg shadow-green-900/40"
+            >
+              <i class="fab fa-github mr-2"></i>VIEW CODE / LIVE DEMO
+            </a>
+          </div>
+        </div>
+
+        <!-- Data Preprocessing Section -->
+        <div class="glass p-10 rounded-[2.5rem] border-t-2 border-blue-500/30">
+          <h3 class="text-2xl font-bold mb-6 text-center">
+            Data Preprocessing & Augmentation
+          </h3>
+          <div class="grid md:grid-cols-2 gap-8">
+            <div>
+              <h4
+                class="text-blue-400 font-bold text-xs uppercase tracking-widest mb-3"
+              >
+                Preprocessing Pipeline
+              </h4>
+              <ul class="text-sm text-slate-400 space-y-2">
+                <li>• Rescaling: Normalization (1/255)</li>
+                <li>• Image resizing: 224×224 pixels</li>
+                <li>• Color space: Grayscale conversion</li>
+                <li>• Label mapping: Disease → Pathogen</li>
+              </ul>
+            </div>
+            <div>
+              <h4
+                class="text-purple-400 font-bold text-xs uppercase tracking-widest mb-3"
+              >
+                Augmentation Techniques
+              </h4>
+              <ul class="text-sm text-slate-400 space-y-2">
+                <li>• Rotation: ±20 degrees</li>
+                <li>• Width/Height shift: ±10%</li>
+                <li>• Shear transformation: 0.1</li>
+                <li>• Zoom range: ±10%</li>
+                <li>• Horizontal flip: True</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section
+        id="results"
+        class="glass p-12 rounded-[3.5rem] border-t-4 border-blue-500"
+      >
+        <h2
+          class="text-3xl font-black mb-12 text-center uppercase tracking-tight"
+        >
+          Results & <span class="text-blue-500">Analysis</span>
+        </h2>
+
+        <!-- Model Comparison Chart -->
+        <div class="grid md:grid-cols-2 gap-16 items-center mb-16">
+          <div class="h-80"><canvas id="modelComparisonChart"></canvas></div>
+          <div class="space-y-6">
+            <div
+              class="p-6 rounded-2xl bg-gradient-to-r from-blue-500/20 to-purple-500/20 border border-blue-500/30 shadow-lg"
+            >
+              <span
+                class="text-slate-300 font-bold uppercase text-xs tracking-widest block mb-2"
+                >Best Model: EfficientNet</span
+              >
+              <span class="text-blue-400 font-mono font-black text-5xl"
+                >94.5%</span
+              >
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+              <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+                <span
+                  class="text-slate-400 text-xs uppercase tracking-wider block mb-1"
+                  >Precision</span
+                >
+                <span class="text-green-400 font-mono font-bold text-2xl"
+                  >94.52%</span
+                >
+              </div>
+              <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+                <span
+                  class="text-slate-400 text-xs uppercase tracking-wider block mb-1"
+                  >Recall</span
+                >
+                <span class="text-green-400 font-mono font-bold text-2xl"
+                  >94.50%</span
+                >
+              </div>
+              <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+                <span
+                  class="text-slate-400 text-xs uppercase tracking-wider block mb-1"
+                  >F1-Score</span
+                >
+                <span class="text-green-400 font-mono font-bold text-2xl"
+                  >94.49%</span
+                >
+              </div>
+              <div class="p-4 rounded-xl bg-white/5 border border-white/10">
+                <span
+                  class="text-slate-400 text-xs uppercase tracking-wider block mb-1"
+                  >Test Samples</span
+                >
+                <span class="text-blue-400 font-mono font-bold text-2xl"
+                  >5,212</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Per-Class Performance -->
+        <div class="glass p-8 rounded-3xl mb-12">
+          <h3 class="text-xl font-bold mb-6 text-center">
+            EfficientNet: Per-Class Performance
+          </h3>
+          <div class="h-64"><canvas id="classPerformanceChart"></canvas></div>
+        </div>
+
+        <!-- Key Findings -->
+        <div class="grid md:grid-cols-2 gap-8">
+          <div class="glass p-8 rounded-3xl border-l-4 border-green-500">
+            <h3
+              class="text-green-400 font-bold text-sm uppercase tracking-widest mb-4"
+            >
+              ✓ Key Findings
+            </h3>
+            <ul class="text-sm text-slate-400 space-y-2">
+              <li>• EfficientNet outperforms ResNet50 by 39.5% in accuracy</li>
+              <li>
+                • Strong performance on Bacteria, Fungus, and Nan classes (>92%)
+              </li>
+              <li>• Effective pathogen-level classification achieved</li>
+              <li>
+                • Transfer learning proves highly effective for agricultural
+                imaging
+              </li>
+            </ul>
+          </div>
+          <div class="glass p-8 rounded-3xl border-l-4 border-yellow-500">
+            <h3
+              class="text-yellow-400 font-bold text-sm uppercase tracking-widest mb-4"
+            >
+              ⚠ Challenges & Limitations
+            </h3>
+            <ul class="text-sm text-slate-400 space-y-2">
+              <li>• Limited performance on Oomycete and Virus classes</li>
+              <li>
+                • Class imbalance in dataset (Fungus: 33.7%, Virus: 11.0%)
+              </li>
+              <li>
+                • ResNet50 struggled with minority classes (0% for
+                Oomycete/Virus)
+              </li>
+              <li>
+                • Need for more diverse training samples for rare pathogens
+              </li>
+            </ul>
+          </div>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="mt-12 glass p-8 rounded-3xl">
+          <h3 class="text-xl font-bold mb-6 text-center">
+            Model Comparison Summary
+          </h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-sm">
+              <thead>
+                <tr class="border-b border-slate-700">
+                  <th
+                    class="text-left py-3 px-4 text-slate-400 font-bold uppercase text-xs"
+                  >
+                    Metric
+                  </th>
+                  <th
+                    class="text-center py-3 px-4 text-slate-400 font-bold uppercase text-xs"
+                  >
+                    ResNet50
+                  </th>
+                  <th
+                    class="text-center py-3 px-4 text-blue-400 font-bold uppercase text-xs"
+                  >
+                    EfficientNet
+                  </th>
+                </tr>
+              </thead>
+              <tbody class="text-slate-300">
+                <tr class="border-b border-slate-800">
+                  <td class="py-3 px-4">Accuracy</td>
+                  <td class="text-center py-3 px-4 font-mono">54.0%</td>
+                  <td
+                    class="text-center py-3 px-4 font-mono text-green-400 font-bold"
+                  >
+                    94.5%
+                  </td>
+                </tr>
+                <tr class="border-b border-slate-800">
+                  <td class="py-3 px-4">Precision (Macro)</td>
+                  <td class="text-center py-3 px-4 font-mono">33.0%</td>
+                  <td
+                    class="text-center py-3 px-4 font-mono text-green-400 font-bold"
+                  >
+                    94.5%
+                  </td>
+                </tr>
+                <tr class="border-b border-slate-800">
+                  <td class="py-3 px-4">Recall (Macro)</td>
+                  <td class="text-center py-3 px-4 font-mono">39.0%</td>
+                  <td
+                    class="text-center py-3 px-4 font-mono text-green-400 font-bold"
+                  >
+                    94.5%
+                  </td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-4">F1-Score (Macro)</td>
+                  <td class="text-center py-3 px-4 font-mono">36.0%</td>
+                  <td
+                    class="text-center py-3 px-4 font-mono text-green-400 font-bold"
+                  >
+                    94.5%
+                  </td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Future Work Section -->
+      <section class="glass p-12 rounded-[3.5rem] border-t-4 border-purple-500">
+        <h2
+          class="text-3xl font-black mb-8 text-center uppercase tracking-tight"
+        >
+          Future <span class="text-purple-500">Enhancements</span>
+        </h2>
+        <div class="grid md:grid-cols-3 gap-6">
+          <div class="glass p-6 rounded-2xl border-l-2 border-purple-500">
+            <h3
+              class="text-purple-400 font-bold text-xs uppercase tracking-widest mb-3"
+            >
+              Data Augmentation
+            </h3>
+            <p class="text-sm text-slate-400">
+              Implement advanced techniques like mixup, cutout, and synthetic
+              data generation to address class imbalance
+            </p>
+          </div>
+          <div class="glass p-6 rounded-2xl border-l-2 border-blue-500">
+            <h3
+              class="text-blue-400 font-bold text-xs uppercase tracking-widest mb-3"
+            >
+              Model Optimization
+            </h3>
+            <p class="text-sm text-slate-400">
+              Fine-tune deeper layers, experiment with ensemble methods, and
+              apply model compression for mobile deployment
+            </p>
+          </div>
+          <div class="glass p-6 rounded-2xl border-l-2 border-green-500">
+            <h3
+              class="text-green-400 font-bold text-xs uppercase tracking-widest mb-3"
+            >
+              Real-World Application
+            </h3>
+            <p class="text-sm text-slate-400">
+              Develop mobile app with real-time inference, integrate treatment
+              recommendations, and field-test with farmers
+            </p>
+          </div>
+        </div>
+      </section>
+
+      <section id="team" class="text-center pt-10 border-t border-slate-900">
+        <h2
+          class="text-[10px] font-black text-slate-600 uppercase tracking-[0.5em] mb-12"
+        >
+          Academic Credits
+        </h2>
+        <div class="flex flex-wrap justify-center gap-10">
+          <div
+            class="glass px-12 py-8 rounded-[2rem] border-b-4 border-blue-600"
+          >
+            <p
+              class="text-[9px] font-bold text-blue-500 mb-2 uppercase tracking-widest"
+            >
+              Project Guide
+            </p>
+            <p class="font-black text-xl text-slate-100">Dr.Aditya Sinha</p>
+            <p class="text-[10px] text-slate-500 mt-1">Department of CSE</p>
+          </div>
+          <div
+            class="glass px-12 py-8 rounded-[2rem] border-b-4 border-green-600"
+          >
+            <p
+              class="text-[9px] font-bold text-green-500 mb-2 uppercase tracking-widest"
+            >
+              Team Member
+            </p>
+            <p class="font-black text-xl text-slate-100">Diya Jain</p>
+            <p class="text-[10px] text-slate-500 mt-1">23FE10CSE00576</p>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="py-12 text-center bg-black/40 border-t border-slate-900">
+      <p
+        class="text-slate-600 text-[10px] font-bold tracking-[0.3em] uppercase mb-2"
+      >
+        Manipal University Jaipur
+      </p>
+      <p
+        class="text-slate-500 text-[9px] font-medium tracking-[0.2em] uppercase opacity-50"
+      >
+        Department of Computer Science & Engineering • 2026
+      </p>
+    </footer>
+
+    <script>
+      // TIMER LOGIC
+      document.addEventListener("DOMContentLoaded", function () {
+        let seconds = 0;
+        const WARNING_TIME = 480; // 8 minutes
+        const MAX_TIME = 600; // 10 minutes
+
+        const display = document.getElementById("displayTime");
+        const container = document.getElementById("timerContainer");
+        const icon = document.getElementById("timerIcon");
+
+        const timer = setInterval(() => {
+          seconds++;
+
+          const minutes = Math.floor(seconds / 60);
+          const secs = seconds % 60;
+
+          display.innerText =
+            minutes.toString().padStart(2, "0") +
+            ":" +
+            secs.toString().padStart(2, "0");
+
+          // 🔴 Warning at 8 minutes
+          if (seconds === WARNING_TIME) {
+            container.classList.add("timer-warning");
+            icon.classList.remove("fa-hourglass-start");
+            icon.classList.add("fa-hourglass-half");
+          }
+
+          // 🛑 Stop at 10 minutes
+          if (seconds >= MAX_TIME) {
+            clearInterval(timer);
+            container.classList.remove("timer-warning");
+            container.classList.add("timer-stop");
+            icon.classList.remove("fa-hourglass-half");
+            icon.classList.add("fa-hourglass-end");
+            display.innerText = "10:00";
+          }
+        }, 1000);
+      });
+
+      // MODEL COMPARISON CHART
+      const ctx1 = document
+        .getElementById("modelComparisonChart")
+        .getContext("2d");
+      new Chart(ctx1, {
+        type: "bar",
+        data: {
+          labels: ["ResNet50", "EfficientNet"],
+          datasets: [
+            {
+              label: "Accuracy (%)",
+              data: [54.0, 94.5],
+              backgroundColor: ["#334155", "#3b82f6"],
+              borderRadius: 15,
+              barThickness: 80,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              callbacks: {
+                label: function (context) {
+                  return "Accuracy: " + context.parsed.y + "%";
+                },
+              },
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              grid: { color: "#ffffff08" },
+              ticks: {
+                color: "#94a3b8",
+                callback: function (value) {
+                  return value + "%";
+                },
+              },
+            },
+            x: { grid: { display: false }, ticks: { color: "#94a3b8" } },
+          },
+        },
+      });
+
+      // PER-CLASS PERFORMANCE CHART (EfficientNet)
+      const ctx2 = document
+        .getElementById("classPerformanceChart")
+        .getContext("2d");
+      new Chart(ctx2, {
+        type: "bar",
+        data: {
+          labels: ["Bacteria", "Fungus", "Nan", "Oomycete", "Virus"],
+          datasets: [
+            {
+              label: "Precision",
+              data: [96.3, 92.0, 97.2, 89.5, 98.2],
+              backgroundColor: "#3b82f6",
+              borderRadius: 8,
+            },
+            {
+              label: "Recall",
+              data: [96.4, 92.2, 97.3, 89.5, 98.3],
+              backgroundColor: "#8b5cf6",
+              borderRadius: 8,
+            },
+            {
+              label: "F1-Score",
+              data: [96.3, 92.1, 97.3, 89.5, 98.2],
+              backgroundColor: "#10b981",
+              borderRadius: 8,
+            },
+          ],
+        },
+        options: {
+          responsive: true,
+          maintainAspectRatio: false,
+          plugins: {
+            legend: {
+              display: true,
+              labels: { color: "#94a3b8" },
+            },
+          },
+          scales: {
+            y: {
+              beginAtZero: true,
+              max: 100,
+              grid: { color: "#ffffff08" },
+              ticks: {
+                color: "#94a3b8",
+                callback: function (value) {
+                  return value + "%";
+                },
+              },
+            },
+            x: { grid: { display: false }, ticks: { color: "#94a3b8" } },
+          },
+        },
+      });
+    </script>
+  </body>
+</html>
